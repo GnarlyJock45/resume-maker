@@ -1,0 +1,71 @@
+.welcome {
+    margin: 10px 30px 4px 30px;
+    padding: 30px 10px;
+    font-size: x-large;
+    text-align: center;
+    background-color: aqua;
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 1px 3px 5px 1px rgb(0 0 0 / 10%);
+    transition: 0.3s;
+    
+}
+
+.welcome:hover {
+    background-color: rgb(0, 197, 197);
+    box-shadow: 2px 4px 5px 1px rgb(0 0 0 / 10%);
+}
+
+.card {
+    transition: 0.3s;
+}
+
+.card:hover {
+    background-color: rgb(196, 201, 201);
+}
+
+.flip-card {
+    background-color: transparent;
+    width: 300px;
+    height: 400px;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .flip-card-front {
+    background-color: #fff;
+    color: black;
+  }
+
+  .flip-card-back {
+    background-color: #333;
+    color: white;
+    transform: rotateY(180deg);
+  }
+
+  /* Tailwind utility classes do not have hover rotation, so we add it manually */
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
