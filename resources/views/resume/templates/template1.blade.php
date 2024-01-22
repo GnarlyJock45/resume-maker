@@ -77,15 +77,54 @@
     <p class="section-content">{{ $resume->phone }}</p>
 </div>
 
-      
+    @php
+        $skills = json_decode($resume->skills, true);
+    @endphp
+    @php
+        $education = json_decode($resume->education, true);
+    @endphp
+    @php
+        $courses = json_decode($resume->courses, true);
+    @endphp
     
       <div class="section">
         <h3 class="section-title section-header">SKILLS</h3>
         <div class="section-content">
-            @foreach ($resume->skills as $skill)
+            @foreach ($skills as $skill)
                 <div class="resume-item">
                     <div class="resume-item-header">
-                        <span class="resume-item-title">{{ $skill }}</span>
+                        <span class="resume-item-title">{{ $skill['name'] }}</span>
+                        @if($skill['description'])
+                            <p>Description: {{ $skill['description'] }}</p>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+      <div class="section">
+        <h3 class="section-title section-header">COURSES</h3>
+        <div class="section-content">
+            @foreach ($courses as $course)
+              <div class="resume-item">
+                  <div class="resume-item-header">
+                      <span class="resume-item-title">{{ $course['name'] }}</span>
+                      @if($course['description'])
+                        <p>Description: {{ $course['description'] }}</p>
+                      @endif
+                  </div>
+              </div>
+            @endforeach
+        </div>
+      <div class="section">
+        <h3 class="section-title section-header">EDUCATION</h3>
+        <div class="section-content">
+            @foreach ($education as $education)
+                <div class="resume-item">
+                    <div class="resume-item-header">
+                        <span class="resume-item-title">{{ $education['name'] }}</span>
+                        @if($education['description'])
+                          <p>Description: {{ $education['description'] }}</p>
+                        @endif
                     </div>
                 </div>
             @endforeach

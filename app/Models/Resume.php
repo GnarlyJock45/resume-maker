@@ -10,11 +10,14 @@ class Resume extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'email', 'phone_number', 'age', 'skills', 'courses', 'education'
+        'name', 'email', 'phone_number', 'age', 'skills', 'courses', 'education','work_experience','job_title',
     ];
 
     protected $casts = [
         'skills' => 'array',
+        'courses' => 'array',
+        'education' => 'array',
+        'work_experience' => 'array',
         // ... other casts ...
     ];
 }

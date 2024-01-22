@@ -16,10 +16,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();
+            $table->string('job_title')->nullable();
             $table->integer('age')->nullable();
             $table->json('skills'); // Storing as text, consider JSON or another structure for more complexity
-            $table->text('courses')->nullable();
-            $table->text('education');
+            $table->json('courses')->nullable(); // Storing as text, consider JSON or another structure for more complexity
+            $table->json('education'); // Storing as text, consider JSON or another structure for more complexity
+            $table->json('work_experience')->nullable();
+            $table->string('template')->default('template1');
             $table->timestamps();
         });
     }

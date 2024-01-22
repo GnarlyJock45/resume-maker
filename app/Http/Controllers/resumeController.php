@@ -21,20 +21,52 @@ class ResumeController extends Controller
 
     public function store(Request $request)
     {
+
+
+    
+        // ]);
         $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:resumes,email',
             'phone_number' => 'nullable|max:255',
-            'age' => 'nullable|integer',
-            // 'skills' => 'required', // You may need a more specific validation rule here
+            'age' => 'nullable|integer|between:18,100',
+            'job_title' => 'nullable|string|max:255',
             'skills' => 'required|array',
-            'skills.*' => 'required|string', // Validates each element of the array
-            'courses' => 'nullable',
-            'education' => 'required',
+            'skills.*.name' => 'required|string|max:255', // Validates the name of each skill
+            'skills.*.description' => 'nullable|string', // Validates the description of each skill        
+            'courses' => 'nullable|array',
+            'courses.*.name' => 'required|string', // Validates the name of each course
+            'courses.*.description' => 'nullable|string', // Validates the description (optional)
+            'education' => 'nullable|array',
+            'education.*.name' => 'required|string', // Validates the name of each education entry
+            'education.*.description' => 'nullable|string', // Validates the description (optional)
+            'work_experience' => 'nullable|array',
+            'work_experience.*.name' => 'required|string', // Adjust as needed
+            'work_experience.*.description' => 'nullable|string', // Adjust as needed
+        
         ]);
 
+        // Create a new resume instance
+        $resume = new Resume();
+        $resume->name = $validatedData['name'];
+        $resume->email = $validatedData['email'];
+        $resume->phone_number = $validatedData['phone_number'];
+        $resume->age = $validatedData['age'];
+        $resume->template = $request->template;
+
+        // Convert arrays to JSON for storing in the database
+        $resume->skills = json_encode($validatedData['skills']);
+        $resume->courses = json_encode($validatedData['courses']);
+        $resume->education = json_encode($validatedData['education']);
+        $resume->work_experience = json_encode($validatedData['work_experience']);
+    
+
+        // Save the resume
+        $resume->save();
+
+
         // Create a new resume instance and save to database
-        $resume = Resume::create($validatedData);
+        // $resume = Resume::create($validatedData);
 
         // Redirect or return response
         return redirect()->route('resume.show', $resume->id)->with('success', 'Resume created successfully!');
@@ -47,9 +79,10 @@ class ResumeController extends Controller
         // Fetch the resume from the database
         $resume = Resume::findOrFail($id);
 
-        // Assuming 'details' is the JSON column in your resumes table
+        $template = $resume->template ?: 'template1';
+
         // and your resume template is 'resume_template.blade.php'
-        return view('resume.templates.template1', ['resume' => $resume]);
+        return view('resume.templates.' . $template , ['resume' => $resume]);
 
     }
 }
