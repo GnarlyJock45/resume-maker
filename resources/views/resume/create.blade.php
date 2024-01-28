@@ -19,7 +19,7 @@
 
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold text-center mb-6">Create Your Resume</h1>
-    <form action="{{ route('resume.store') }}" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded shadow">
+    <form action="{{ route('generate.pdf') }}" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded shadow">
         @csrf
         <div class="mb-4">
             <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>

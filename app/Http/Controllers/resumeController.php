@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Resume; // Import the Resume model
+use PDF; // Import the facade
 
 class ResumeController extends Controller
 {
@@ -84,6 +85,55 @@ class ResumeController extends Controller
         // and your resume template is 'resume_template.blade.php'
         return view('resume.templates.' . $template , ['resume' => $resume]);
 
+    }
+
+    public function generatePDF(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:resumes,email',
+            'phone_number' => 'nullable|max:255',
+            'age' => 'nullable|integer|between:18,100',
+            'job_title' => 'nullable|string|max:255',
+            'skills' => 'required|array',
+            'skills.*.name' => 'required|string|max:255', // Validates the name of each skill
+            'skills.*.description' => 'nullable|string', // Validates the description of each skill        
+            'courses' => 'nullable|array',
+            'courses.*.name' => 'required|string', // Validates the name of each course
+            'courses.*.description' => 'nullable|string', // Validates the description (optional)
+            'education' => 'nullable|array',
+            'education.*.name' => 'required|string', // Validates the name of each education entry
+            'education.*.description' => 'nullable|string', // Validates the description (optional)
+            'work_experience' => 'nullable|array',
+            'work_experience.*.name' => 'required|string', // Adjust as needed
+            'work_experience.*.description' => 'nullable|string', // Adjust as needed
+        
+        ]);
+
+        // Create a new resume instance
+        $resume = new Resume();
+        $resume->name = $validatedData['name'];
+        $resume->email = $validatedData['email'];
+        $resume->phone_number = $validatedData['phone_number'];
+        $resume->age = $validatedData['age'];
+        $resume->template = $request->template;
+
+        // Convert arrays to JSON for storing in the database
+        $resume->skills = json_encode($validatedData['skills']);
+        $resume->courses = json_encode($validatedData['courses']);
+        $resume->education = json_encode($validatedData['education']);
+        $resume->work_experience = json_encode($validatedData['work_experience']);
+    
+
+        // Save the resume
+        $resume->save();
+
+        $template = $resume->template ?: 'template1';
+        // Assuming you have a Blade view for your resume template
+        $pdf = PDF::loadView('resume.templates.' . $template , ['resume' => $resume]); // Replace 'data' with actual data variable
+
+        // Return a download response
+        return $pdf->download('resume.pdf');
     }
 }
 

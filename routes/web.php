@@ -21,4 +21,6 @@ Route::get('/', function () {
 Route::get('/resume', [ResumeController::class, 'index'])->name('resume.index');
 Route::get('/resume/create', [ResumeController::class, 'create'])->name('resume.create');
 Route::post('/resume', [ResumeController::class, 'store'])->name('resume.store');
+Route::post('/generate-pdf', [ResumeController::class, 'generatePDF'])->name('generate.pdf');
+
 Route::get('/resume/{id}', [ResumeController::class, 'show'])->name('resume.show');
