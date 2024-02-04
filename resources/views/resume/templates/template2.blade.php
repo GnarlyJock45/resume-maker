@@ -32,14 +32,15 @@
         .resume-border {
             border: 20px solid #007bff; /* Approximate blue color */
         }
-        .resume-border-gradient {
+        /* .resume-border-gradient {
             border: 20px solid transparent;
             border-width: 25px 25px;
             border-image: linear-gradient(to right, #5baafffe, #2a91ff) 1;
         }
         .divider {
-            border-right: 3px solid #000000; /* Adjust color as needed */
-        }
+            border-right: 3px solid #000000;
+        } 
+        */
     </style>
 </head>
 <body class="bg-gray-100 resume-font">
