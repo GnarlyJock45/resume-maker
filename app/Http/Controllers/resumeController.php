@@ -112,6 +112,7 @@ class ResumeController extends Controller
 
         ]);
 
+
         // Create a new resume instance
         $resume = new Resume();
         $resume->name = $validatedData['name'];
@@ -137,27 +138,44 @@ class ResumeController extends Controller
         // // Return a download response
         // return $pdf->download('resume.pdf');
 
+
+
         // --------------------------- LateX Method: Currently WORKING
 
-        $template_name = "{$resume->template}" . ".tex";
+
+        $skills = json_decode($resume->skills, true);
+        $education = json_decode($resume->education, true);
+        $courses = json_decode($resume->courses, true);
+        $work_experience = json_decode($resume->work_experience, true);
+        
+        // dd($work_experience[0]['name']);
+        // Calling the template
+        $template_name = "templates/{$resume->template}" . ".tex";
         $template = Storage::get($template_name);
+
+        // Filling in the data 
         $template = str_replace('{{NAME}}', $resume->name, $template);
-        $texFileName = 'tempfile_' . uniqid() . '.tex';
+
+        // Creating the .tex file
+        $texFileName = 'documents/' . uniqid() . '.tex';
         Storage::put($texFileName, $template);
-        // Compile the .tex file to PDF (using a command line tool like pdflatex)
+
+
         // Note: Ensure pdflatex is installed on your server
-        // $outputDir = ".\storage\app"; // Specify output directory
-        // $texFilePath = $outputDir . '/' . $texFileName;
-        $outputDir = storage_path("app");
+
+
+        // Defining the paths for the output: PDF and .tex
+        $outputDir = storage_path("app/documents");
         $texFilePath = storage_path("app/{$texFileName}");
         $pdfFilePath = $outputDir . '/' . basename($texFileName, '.tex') . '.pdf';
-        // $texFilePath = storage_path('app/' . $texFileName);
-        // $pdfFilePath = storage_path('app/' . basename($texFileName, '.tex') . '.pdf');
-        // exec("pdflatex -output-directory={$outputDir} {$texFilePath}");
+
+        // The command for generating the pdf
         $command = "pdflatex -output-directory {$outputDir} {$texFilePath}";
-        // pdflatex -output-directory .\storage\app .\storage\app\tempfile_65bf7a86eed14.tex
-        // C:\Users\Yazan\Documents\Laravel Workspace\resume-builder\storage\app\{tempfile_65bf7b4894858.tex}
         exec($command, $output, $returnVar);
+
+
+        // The error tracing 
+
 
         // Check the output and return variable to ensure it executed successfully
         if ($returnVar === 0) {
@@ -165,14 +183,10 @@ class ResumeController extends Controller
             return response()->download($pdfFilePath);
         } else {
             // Handle errors, maybe log $output for debugging
-            dd("An Error Occurred");
+            dd($command);
         }
 
-        // $command = "pdflatex -output-directory=temp -jobname=" . basename($pdfFilePath, '.pdf') . " " . storage_path('app/' . $texFilePath);
-        // exec($command . ' 2>&1', $output, $return_var);
-        // $process = new Process(['pdflatex', "-output-directory=temp -jobname=". basename($pdfFilePath, '.pdf') . " " . storage_path('app/' . $texFilePath)]);
-        // $process->run();
-        // return redirect("/");
+        // Deleting the remains after finishing
         Storage::delete($texFilePath);
 
 

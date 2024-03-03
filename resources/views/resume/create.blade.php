@@ -203,13 +203,13 @@
 
         var newInput = document.createElement('input');
         newInput.type = 'text';
-        newInput.name = 'experience[' + experienceIndex + '][name]';
+        newInput.name = 'work_experience[' + experienceIndex + '][name]';
         newInput.placeholder = 'Experience Name';
         newInput.className = 'shadow border rounded py-2 px-3 form-input mt-1 block w-full';
         newExperienceContainer.appendChild(newInput);
 
         var newTextArea = document.createElement('textarea');
-        newTextArea.name = 'experience[' + experienceIndex + '][description]';
+        newTextArea.name = 'work_experience[' + experienceIndex + '][description]';
         newTextArea.placeholder = 'Experience Description (optional)';
         newTextArea.className = 'shadow border rounded py-2 px-3 form-input mt-1 block w-full';
         newTextArea.rows = 2;
